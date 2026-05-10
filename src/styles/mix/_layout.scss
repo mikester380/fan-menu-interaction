@@ -1,0 +1,25 @@
+@mixin cwf($type: "xy", $dir: "row") {
+  display: flex;
+  $cpx: justify-content;
+  $cpy: align-items;
+
+  @if $dir == "col" {
+    flex-direction: column;
+
+    $cpx: align-items;
+    $cpy: justify-content;
+  }
+
+  @if $type == "x" {
+    #{$cpx}: center;
+  }
+
+  @if $type == "y" {
+    #{$cpy}: center;
+  }
+
+  @if $type == "xy" {
+    justify-content: center;
+    align-items: center;
+  }
+}
