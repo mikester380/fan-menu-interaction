@@ -1,3 +1,4 @@
 .app {
-  @include cwf("x");
+  min-height: 100dvh;
+  position: relative;
 }

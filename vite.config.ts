@@ -19,11 +19,10 @@ export default defineConfig({
         loadPaths: [path.join(__dirname, "src/styles")],
         silenceDeprecations: ["legacy-js-api"],
 
-        additionalData: (content, src) => {
-          const fileName = path.basename(src);
-          const imp = "@use 'imports' as *;";
+        additionalData: (content) => {
+          const imp = '@use "shared" as *;\n';
 
-          return (/\.module\.scss$/.test(fileName) ? imp : "") + content;
+          return imp + content;
         },
       },
     },
