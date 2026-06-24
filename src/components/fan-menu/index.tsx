@@ -93,7 +93,6 @@ function Button({
       y: destY - (startY + box.height),
       // slight rotation
       r: index * -7,
-      // r: -(deg / (Math.PI * 2)) * 360,
     };
   }, [g, startX, startY, box.height, index]);
 
