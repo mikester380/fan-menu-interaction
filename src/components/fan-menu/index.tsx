@@ -3,9 +3,7 @@ import React, {
   useRef,
   useLayoutEffect,
   type PropsWithChildren,
-  useEffect,
   useMemo,
-  useCallback,
 } from "react";
 import { motion, AnimatePresence, arc } from "motion/react";
 import { createPortal } from "react-dom";
