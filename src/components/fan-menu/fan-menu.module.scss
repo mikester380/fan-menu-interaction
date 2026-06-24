@@ -1,5 +1,6 @@
 html {
   --all-round-radius: 9999px;
+  --shadow: 0 0 3px 1px rgb(0 0 0 / 8%);
 }
 
 .toggle {
@@ -15,7 +16,7 @@ html {
   border-radius: var(--all-round-radius);
   @include cwf("xy");
   background-color: $white;
-  box-shadow: 0 0 2px rgb(0 0 0 / 8%);
+  box-shadow: var(--shadow);
   z-index: 1;
 
   .toggleIcon {
@@ -30,7 +31,7 @@ html {
   @include cwf("y");
   gap: 6px;
   border-radius: var(--all-round-radius);
-  box-shadow: 0 0 3px 2px rgb(0 0 0 / 8%);
+  box-shadow: var(--shadow);
   height: 40px;
   padding: 14px;
   font-weight: 600;

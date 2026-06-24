@@ -58,6 +58,8 @@ interface Geometry {
   tcy: number;
 }
 
+const MotionPlus = motion.create(Plus);
+
 function Button({
   children,
   geometry: g,
@@ -183,7 +185,16 @@ export default function FanMenu() {
         className={style.toggle}
         ref={toggle}
       >
-        <Plus className={style.toggleIcon} />
+        <MotionPlus
+          className={style.toggleIcon}
+          animate={{
+            rotate: opened ? -45 : 0,
+            transition: {
+              ease: "easeInOut",
+              duration: 0.2,
+            },
+          }}
+        />
       </button>
       <Portal>
         <AnimatePresence>
