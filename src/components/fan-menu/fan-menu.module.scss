@@ -15,7 +15,8 @@ html {
   border-radius: var(--all-round-radius);
   @include cwf("xy");
   background-color: $white;
-  box-shadow: 0 0 4px rgb(0 0 0 / 8%);
+  box-shadow: 0 0 2px rgb(0 0 0 / 8%);
+  z-index: 1;
 
   .toggleIcon {
     display: block;
@@ -27,9 +28,17 @@ html {
   border: none;
   background-color: $white;
   @include cwf("y");
-  gap: 8px;
+  gap: 6px;
   border-radius: var(--all-round-radius);
-  box-shadow: 0 0 4px rgb(0 0 0 / 8%);
+  box-shadow: 0 0 3px 2px rgb(0 0 0 / 8%);
   height: 40px;
   padding: 14px;
+  font-weight: 600;
+
+  .btnIcon {
+    width: 20px;
+    height: 20px;
+    stroke: gray;
+    stroke-width: 2;
+  }
 }

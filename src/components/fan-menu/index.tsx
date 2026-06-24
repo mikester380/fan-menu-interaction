@@ -5,6 +5,7 @@ import React, {
   type PropsWithChildren,
   useEffect,
   useMemo,
+  useCallback,
 } from "react";
 import { motion, AnimatePresence, arc } from "motion/react";
 import { createPortal } from "react-dom";
@@ -47,8 +48,8 @@ const buttons: { text: string; icon: LucideIcon }[] = [
 
 const getRect = (node: HTMLElement) => node.getBoundingClientRect();
 
-const MENU_RADIUS = 220;
-const Y_OFFSET_FROM_TOGGLE = 0;
+const MENU_RADIUS = 300;
+const Y_OFFSET_FROM_TOGGLE = 20;
 
 interface Geometry {
   top: number;
@@ -73,8 +74,11 @@ function Button({
     setBox(r);
   }, []);
 
+  const startX = g.left;
+  const startY = g.tcy - box.height / 2;
+
   const dest = useMemo(() => {
-    const deg = index * 20 * (Math.PI / 180);
+    const deg = index * 13 * (Math.PI / 180);
 
     const ox = g.left - MENU_RADIUS;
     const oy = g.top - Y_OFFSET_FROM_TOGGLE;
@@ -83,11 +87,13 @@ function Button({
     const destY = oy - Math.sin(deg) * MENU_RADIUS;
 
     return {
-      x: destX - box.left,
-      y: destY - box.bottom,
-      r: -deg,
+      x: destX - startX,
+      y: destY - (startY + box.height),
+      // slight rotation
+      r: index * -7,
+      // r: -(deg / (Math.PI * 2)) * 360,
     };
-  }, [box, g]);
+  }, [g, startX, startY, box.height, index]);
 
   const motionPath = useMemo(() => {
     const chord = Math.hypot(dest.x, dest.y);
@@ -95,15 +101,14 @@ function Button({
       MENU_RADIUS -
       Math.sqrt(Math.pow(MENU_RADIUS, 2) - Math.pow(chord / 2, 2));
 
-    const common = {
+    const arcCommon = {
       strength: hOfChord / chord,
       peak: 0.5,
-      rotate: true,
     };
 
     return {
-      enter: arc({ ...common, direction: "ccw" }),
-      exit: arc({ ...common, direction: "cw" }),
+      enter: arc({ ...arcCommon, direction: "ccw" }),
+      exit: arc({ ...arcCommon, direction: "cw" }),
     };
   }, [dest]);
 
@@ -112,18 +117,25 @@ function Button({
       ref={ref}
       style={{
         position: "fixed",
-        top: g.tcy - box.height / 2,
-        left: g.left,
+        top: startY,
+        left: startX,
       }}
-      className={style.button}
+      className={style.btn}
       transition={{
-        duration: 1,
         type: "spring",
+        stiffness: 250,
+        damping: 22,
+      }}
+      initial={{
+        filter: "blur(8px)",
+        opacity: 0,
       }}
       animate={{
         x: dest.x,
         y: dest.y,
-        // rotate: dest.r,
+        rotate: dest.r,
+        opacity: 1,
+        filter: "blur(0px)",
         transition: {
           inherit: true,
           path: motionPath.enter,
@@ -132,7 +144,9 @@ function Button({
       exit={{
         x: 0,
         y: 0,
-        // rotate: 0,
+        rotate: 0,
+        opacity: 0,
+        filter: "blur(8px)",
         transition: {
           inherit: true,
           path: motionPath.exit,
@@ -145,17 +159,21 @@ function Button({
 }
 
 export default function FanMenu() {
+  const toggle = useRef<HTMLButtonElement>(null);
   const [opened, setOpened] = useState(false);
   const [geometry, setGeometry] = useState<Geometry>({
     top: 0,
     left: 0,
     tcy: 0,
   });
-  const toggle = useRef<HTMLButtonElement>(null);
 
   useLayoutEffect(() => {
     const { top, left, height } = getRect(toggle.current!);
-    setGeometry({ top, left, tcy: top + height / 2 });
+    setGeometry({
+      tcy: top + height / 2,
+      top,
+      left,
+    });
   }, []);
 
   return (
@@ -173,7 +191,7 @@ export default function FanMenu() {
             <div>
               {buttons.map((button, index) => (
                 <Button key={index} index={index} geometry={geometry}>
-                  <button.icon />
+                  <button.icon className={style.btnIcon} />
                   {button.text}
                 </Button>
               ))}
