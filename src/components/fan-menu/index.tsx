@@ -171,11 +171,7 @@ export default function FanMenu() {
 
   useLayoutEffect(() => {
     const { top, left, height } = getRect(toggle.current!);
-    setGeometry({
-      tcy: top + height / 2,
-      top,
-      left,
-    });
+    setGeometry({ tcy: top + height / 2, top, left });
   }, []);
 
   return (
